@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: taskpilot
+
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:taskpilot.db
+    test-while-idle: false
+    test-on-borrow: false
+
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    show-sql: true
+
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        format_sql: true
