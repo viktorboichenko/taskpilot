@@ -6,11 +6,11 @@ plugins {
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
-description = "Todo REST API strudent project"
+description = "Todo REST API student project"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(25)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
@@ -32,6 +32,10 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	// sqlite
+	runtimeOnly("org.xerial:sqlite-jdbc")
+	implementation("org.hibernate.orm:hibernate-community-dialects")
 }
 
 tasks.withType<Test> {
