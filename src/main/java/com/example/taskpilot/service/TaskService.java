@@ -51,4 +51,35 @@ public class TaskService {
         task.setAssignee(user);
         return taskRepository.save(task);
     }
+
+    @Transactional
+    public Task updateStatus(UUID taskId, TaskStatus newStatus) {
+        var task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+        if (!isValidTransition(task.getStatus(), newStatus)) {
+            throw new IllegalArgumentException("Invalid transition from " + task.getStatus() + " to " + newStatus);
+        }
+
+        if (newStatus == TaskStatus.IN_PROGRESS && task.getAssignee() != null) {
+            int activeTasks = taskRepository.countByAssigneeIdAndStatus(task.getAssignee().getId(), TaskStatus.IN_PROGRESS);
+            if (activeTasks >= MAX_WIP_LIMIT) {
+                throw new IllegalStateException("User is overloaded, cannot start new task.");
+            }
+        }
+
+        task.setStatus(newStatus);
+        return taskRepository.save(task);
+    }
+
+    public boolean isValidTransition(TaskStatus oldStatus, TaskStatus newStatus) {
+        if (oldStatus == newStatus) return true;
+
+        return switch (oldStatus) {
+            case TODO -> newStatus == TaskStatus.IN_PROGRESS;
+            case IN_PROGRESS -> List.of(TaskStatus.REVIEW, TaskStatus.TODO).contains(newStatus);
+            case REVIEW -> List.of(TaskStatus.DONE, TaskStatus.IN_PROGRESS).contains(newStatus);
+            case DONE -> newStatus == TaskStatus.IN_PROGRESS;
+        };
+    }
 }
