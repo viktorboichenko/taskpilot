@@ -1,0 +1,31 @@
+@baseUrl = http://localhost:8080/api/tasks
+
+GET {{baseUrl}}
+
+### create new task
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "title": "Test from http file",
+  "description": "Do something again",
+  "priority": "MEDIUM"
+}
+
+> {%
+// save task id
+    client.global.set("taskId", response.body.id);
+%}
+
+### updateStatus
+PATCH {{baseUrl}}/{{taskId}}/status?status=IN_PROGRESS
+
+### updateStatus should fail
+# from IN_PROGRESS back to DONE, no REVIEW.
+# should fail
+PATCH {{baseUrl}}/{{taskId}}/status?status=DONE
+
+###
+@userIdToAssign = REPLACE_WITH_UUID_FROM_STEP_1
+
+PATCH {{baseUrl}}/{{taskId}}/assign/{{userIdToAssign}}
