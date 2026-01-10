@@ -5,8 +5,6 @@ spring:
   datasource:
     driver-class-name: org.sqlite.JDBC
     url: jdbc:sqlite:taskpilot.db
-    test-while-idle: false
-    test-on-borrow: false
 
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
