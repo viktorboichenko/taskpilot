@@ -15,4 +15,12 @@ public class UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
+    public User addNewUser(String name, String email) {
+        var user = User.builder()
+                .name(name)
+                .email(email)
+                .build();
+        return userRepository.save(user);
+    }
 }
