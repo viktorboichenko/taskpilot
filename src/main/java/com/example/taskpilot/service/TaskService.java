@@ -34,6 +34,21 @@ public class TaskService {
     }
 
     @Transactional
+    public Task updateTaskDetails(UUID id, String newTitle, String newDescription) {
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+        if (newTitle != null && !newTitle.isBlank()) {
+            task.setTitle(newTitle);
+        }
+        if (newDescription != null) {
+            task.setDescription(newDescription);
+        }
+
+        return taskRepository.save(task);
+    }
+
+    @Transactional
     public Task assignUser(UUID taskId, UUID userId) {
         var task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));

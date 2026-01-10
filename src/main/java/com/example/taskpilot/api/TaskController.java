@@ -26,6 +26,11 @@ public class TaskController {
         return ResponseEntity.ok(taskService.createTask(req.title(), req.description(), req.priority()));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateDetails(@PathVariable UUID id, @RequestBody CreateTaskRequest req) {
+        return ResponseEntity.ok(taskService.updateTaskDetails(id, req.title(), req.description()));
+    }
+
     @PatchMapping("/{id}/assign/{userId}")
     public ResponseEntity<Task> assign(@PathVariable UUID id, @PathVariable UUID userId) {
         return ResponseEntity.ok(taskService.assignUser(id, userId));

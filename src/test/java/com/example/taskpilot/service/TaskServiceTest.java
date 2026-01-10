@@ -85,4 +85,35 @@ class TaskServiceTest {
         verify(taskRepository, never()).deleteById(any());
     }
 
+    @Test
+    @DisplayName("When task exists then update title and description")
+    void updateTaskDetails_Success() {
+        UUID givenTaskId = UUID.randomUUID();
+        var oldTitle = "Old Title";
+        var newTitle = "New Title";
+        var newDesc = "New Description";
+        Task givenTask = Task.builder().id(givenTaskId).title(oldTitle).description("Old").build();
+
+        when(taskRepository.findById(givenTaskId)).thenReturn(Optional.of(givenTask));
+        when(taskRepository.save(any(Task.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        Task actualResult = taskService.updateTaskDetails(givenTaskId, newTitle, newDesc);
+
+        assertEquals(newTitle, actualResult.getTitle());
+        assertEquals(newDesc, actualResult.getDescription());
+        verify(taskRepository).save(givenTask);
+    }
+
+    @Test
+    @DisplayName("When task does not exist for update then throw exception")
+    void updateTaskDetails_NotFound() {
+        UUID givenTaskId = UUID.randomUUID();
+        when(taskRepository.findById(givenTaskId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () ->
+                taskService.updateTaskDetails(givenTaskId, "Title", "Desc")
+        );
+        verify(taskRepository, never()).save(any());
+    }
+
 }
