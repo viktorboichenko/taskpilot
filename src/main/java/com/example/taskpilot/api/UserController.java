@@ -29,4 +29,15 @@ public class UserController {
     public ResponseEntity<User> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getById(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> update(@PathVariable UUID id, @RequestBody UpdateUserRequest req) {
+        return ResponseEntity.ok(userService.update(id, req.name(), req.email()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
