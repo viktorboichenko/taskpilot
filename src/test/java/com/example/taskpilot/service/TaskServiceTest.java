@@ -64,4 +64,25 @@ class TaskServiceTest {
         verify(taskRepository).save(givenTask);
     }
 
+    @Test
+    @DisplayName("When task exists then delete it")
+    void deleteTask_Success() {
+        UUID givenTaskId = UUID.randomUUID();
+        when(taskRepository.existsById(givenTaskId)).thenReturn(true);
+
+        taskService.deleteTask(givenTaskId);
+
+        verify(taskRepository).deleteById(givenTaskId);
+    }
+
+    @Test
+    @DisplayName("When task does not exist then throw exception")
+    void deleteTask_NotFound() {
+        UUID givenTaskId = UUID.randomUUID();
+        when(taskRepository.existsById(givenTaskId)).thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> taskService.deleteTask(givenTaskId));
+        verify(taskRepository, never()).deleteById(any());
+    }
+
 }

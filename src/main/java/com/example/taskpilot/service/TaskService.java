@@ -82,4 +82,11 @@ public class TaskService {
             case DONE -> newStatus == TaskStatus.IN_PROGRESS;
         };
     }
+
+    public void deleteTask(UUID id) {
+        if (!taskRepository.existsById(id)) {
+            throw new IllegalArgumentException("Task not found");
+        }
+        taskRepository.deleteById(id);
+    }
 }
